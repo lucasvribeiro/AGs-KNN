@@ -1,3 +1,6 @@
+import sys
+K = int(sys.argv[1])
+
 # Abrindo arquivos
 teste       = open ('teste.txt', 'r')
 treinamento = open('treinamento.txt', 'r')
@@ -25,7 +28,7 @@ def comparaLinha (linhaTeste):
 
     # Descobre qual a classe do dígito que obteve menor distância
     contador = 0        # Contador de K
-    while contador < 9: # Itera K vezes
+    while contador < K: # Itera K vezes
         menor = distancia[0]
         pos = 0
         i = 0
@@ -46,8 +49,13 @@ def comparaLinha (linhaTeste):
         pos = 0
         i = 0
 
-    print(classes)       #retorna o vetor de classes
+    return classes  #retorna o vetor de classes
 
+i = 0
 for linhaTeste in teste: # Itera por cada um dos 1000 dígitos de teste
+    acertos = []
     linhaTeste = linhaTeste.split(' ')
-    comparaLinha(linhaTeste)
+    acertos = comparaLinha(linhaTeste)
+    print(acertos)                         # Retorna o vetor de acertos do dígito
+    print((acertos[int(i/100)] / K) * 100) # Retorna a porcentagem de acertos para aquele dígito
+    i += 1
