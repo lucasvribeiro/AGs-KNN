@@ -50,7 +50,7 @@ def comparaLinha (linhaTeste):
         i = 0
 
     maior = max(classes, key=int)   # retorna o maior valor do vetor de classes 
-    return classes.index(x)         # retorna o índice da classe 
+    return classes.index(maior)         # retorna o índice da classe 
 
 i = 0
 acertos = 0
