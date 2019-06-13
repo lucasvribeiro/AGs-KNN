@@ -52,12 +52,14 @@ def comparaLinha (linhaTeste):
     return classes  #retorna o vetor de classes
 
 i = 0
+somaAcertos = 0
 for linhaTeste in teste: # Itera por cada um dos 1000 dígitos de teste
     acertos = []
     digito = int(i/100)
     linhaTeste = linhaTeste.split(' ')
     acertos = comparaLinha(linhaTeste)
-    print(digito, end="     ")
-    print(acertos, end="    ")                         # Retorna o vetor de acertos do dígito
-    print((acertos[digito] / K) * 100,'%') # Retorna a porcentagem de acertos para aquele dígito
+    somaAcertos += acertos[digito] # Soma o total de acertos de todos os dígitos
     i += 1
+
+porcentagem = (somaAcertos/(K*1000)) * 100
+print("Porcentagem de acertos:", porcentagem, '%')
