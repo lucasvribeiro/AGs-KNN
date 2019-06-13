@@ -49,17 +49,18 @@ def comparaLinha (linhaTeste):
         pos = 0
         i = 0
 
-    return classes  #retorna o vetor de classes
+    maior = max(classes, key=int)   # retorna o maior valor do vetor de classes 
+    return classes.index(x)         # retorna o índice da classe 
 
 i = 0
-somaAcertos = 0
+acertos = 0
 for linhaTeste in teste: # Itera por cada um dos 1000 dígitos de teste
-    acertos = []
     digito = int(i/100)
     linhaTeste = linhaTeste.split(' ')
-    acertos = comparaLinha(linhaTeste)
-    somaAcertos += acertos[digito] # Soma o total de acertos de todos os dígitos
+    indice = comparaLinha(linhaTeste)
+    if indice == digito:
+        acertos += 1
     i += 1
 
-porcentagem = (somaAcertos/(K*1000)) * 100
-print("Porcentagem de acertos:", porcentagem, '%')
+porcentagem = (acertos/1000) * 100
+print("Accuracy:", porcentagem, '%')
