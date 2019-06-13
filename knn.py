@@ -54,8 +54,10 @@ def comparaLinha (linhaTeste):
 i = 0
 for linhaTeste in teste: # Itera por cada um dos 1000 dígitos de teste
     acertos = []
+    digito = int(i/100)
     linhaTeste = linhaTeste.split(' ')
     acertos = comparaLinha(linhaTeste)
-    print(acertos)                         # Retorna o vetor de acertos do dígito
-    print((acertos[int(i/100)] / K) * 100) # Retorna a porcentagem de acertos para aquele dígito
+    print(digito, end="     ")
+    print(acertos, end="    ")                         # Retorna o vetor de acertos do dígito
+    print((acertos[digito] / K) * 100,'%') # Retorna a porcentagem de acertos para aquele dígito
     i += 1
