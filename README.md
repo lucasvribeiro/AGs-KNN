@@ -1,3 +1,9 @@
 # Inteligência Artificial - Trabalho 2 - Algoritmos Genéticos + K-NN
 
-Algoritmos Genéticos são utilizados há tempos para o processo de seleção de características [01]. O principal objetivo deste trabalho é utilizar Algoritmos Genéticos para encontrar quais são as características que otimizam a taxa de acerto para o problema de reconhecimento de dígitos (10 dígitos 0 - 9). A partir de um conjunto de treinamento / teste, você deverá encontrar qual a taxa de acertos usando o classificador k-NN com todas as 132 características, e logo após, implementar um código para ser usado em AG’s buscando maximizar a taxa de acerto. 
+Desenvolvido por Lucas Vinicius Ribeiro e Lucas Souza Santos
+
+## Execução do Programa
+
+    $python3 algoritmo_genetico.py 1
+   
+Onde o argumento 1 é o valor de K
