@@ -106,6 +106,7 @@ def recombinacao(populacao, avaliacao):
 
     piorUm = piores[0]
     piorDois = piores[1]
+    
 
     for i in range(2):
         corte = random.randint(1,130)
