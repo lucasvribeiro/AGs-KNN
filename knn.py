@@ -107,9 +107,10 @@ def recombinacao(populacao, avaliacao):
     piorUm = piores[0]
     piorDois = piores[1]
 
-    corte = random.randint(1,130)
-    novoIndividuo = pai[0:corte] + mae[corte:]
-    novaPopulacao.append(novoIndividuo)
+    for i in range(2):
+        corte = random.randint(1,130)
+        novoIndividuo = pai[0:corte] + mae[corte:]
+        novaPopulacao.append(novoIndividuo)
     
     for i in range(2):
         corte = random.randint(1,130)
@@ -121,12 +122,10 @@ def recombinacao(populacao, avaliacao):
 
         novaPopulacao.append(novoIndividuo)
     
-    corte = random.randint(1,130)
-    novoIndividuo = piorUm[0:corte] + piorDois[corte:]
-    novaPopulacao.append(novoIndividuo)
-
-    aleatorios = geraPopulacao(2)
-    novaPopulacao.extend(aleatorios)
+    for i in range(2):
+        corte = random.randint(1,130)
+        novoIndividuo = piorUm[0:corte] + piorDois[corte:]
+        novaPopulacao.append(novoIndividuo)
     
 
     
