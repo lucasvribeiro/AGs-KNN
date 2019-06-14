@@ -63,10 +63,10 @@ def avaliaPopulacao(populacao, teste, treinamento, K):
     print("Avaliação da População: ", populacaoAvaliada)
     return populacaoAvaliada
 
-def geraPopulacao():
+def geraPopulacao(n):
     populacao = []
     individuo = []
-    for i in range(10):
+    for i in range(n):
         for j in range(132):
             individuo.append(random.randint(0,1))
         populacao.append(individuo)
@@ -77,32 +77,69 @@ def geraPopulacao():
 
 def recombinacao(populacao, avaliacao):
     pais = []
+    piores = []
+    piorUm = []
+    piorDois = []
     novaPopulacao = []
     novoIndividuo = []
+
+    auxiliar = avaliacao.copy()
+
     for i in range(2):
         maior = max(avaliacao)
         indiceMaiorAvaliacao = avaliacao.index(maior)
         pais.append(populacao[indiceMaiorAvaliacao])
+        if i == 0:
+            print("Melhor: ", avaliacao[indiceMaiorAvaliacao])
         avaliacao[indiceMaiorAvaliacao] = -float('inf')
     
     pai = pais[0]
     mae = pais[1]
+
+    for i in range(2):
+        menor = min(auxiliar)
+        indiceMenorAvaliacao = auxiliar.index(menor)
+        piores.append(populacao[indiceMenorAvaliacao])
+        print("Pior: ", auxiliar[indiceMenorAvaliacao])
+        auxiliar[indiceMenorAvaliacao] = float('inf')
     
-    for i in range(6):
+
+    piorUm = piores[0]
+    piorDois = piores[1]
+
+    corte = random.randint(1,130)
+    novoIndividuo = pai[0:corte] + mae[corte:]
+    novaPopulacao.append(novoIndividuo)
+    
+    for i in range(2):
         corte = random.randint(1,130)
         
-        novoIndividuo = pai[0:corte] + mae[corte:]
+        if i == 0:
+            novoIndividuo = pai[0:corte] + piorUm[corte:]
+        else:
+            novoIndividuo = mae[0:corte] + piorDois[corte:]
+
         novaPopulacao.append(novoIndividuo)
+    
+    corte = random.randint(1,130)
+    novoIndividuo = piorUm[0:corte] + piorDois[corte:]
+    novaPopulacao.append(novoIndividuo)
+
+    aleatorios = geraPopulacao(2)
+    novaPopulacao.extend(aleatorios)
+    
+
     
     novaPopulacao.append(pai)
     
-    individuoMutado = random.randint(0,6)
-    caracteristicaMutada = random.randint(0,131)
+    for i in range(10):
+      individuoMutado = random.randint(0,6)
+      caracteristicaMutada = random.randint(0,131)
 
-    if(novaPopulacao[individuoMutado][caracteristicaMutada]):
-        novaPopulacao[individuoMutado][caracteristicaMutada] = 0
-    else:
-        novaPopulacao[individuoMutado][caracteristicaMutada] = 1
+      if(novaPopulacao[individuoMutado][caracteristicaMutada]):
+          novaPopulacao[individuoMutado][caracteristicaMutada] = 0
+      else:
+          novaPopulacao[individuoMutado][caracteristicaMutada] = 1
 
     return novaPopulacao
 
@@ -114,7 +151,7 @@ def main():
     arquivoTeste       = open ('teste.txt', 'r')
     arquivoTreinamento = open('treinamento.txt', 'r')
 
-    populacao = geraPopulacao() 
+    populacao = geraPopulacao(7) 
 
     teste = []
     treinamento = []
@@ -132,7 +169,7 @@ def main():
         teste.append(arrayFloat)
         linhaTeste = arquivoTeste.readline()
 
-    for i in range(3):
+    while True:
         print("* GERAÇÃO ", geracao , " *")
         avaliacao = avaliaPopulacao(populacao, teste, treinamento, K)
         novaPopulacao = recombinacao(populacao, avaliacao)
