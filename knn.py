@@ -1,30 +1,22 @@
 import sys
-K = int(sys.argv[1])
-
-# Abrindo arquivos
-teste       = open ('teste.txt', 'r')
-treinamento = open('treinamento.txt', 'r')
-
-# Separando por linhas
-teste       = teste.readlines()
-treinamento = treinamento.readlines()
+import random
 
 # Calcula a Distância Euclidiana dos dois dígitos
-def algoritmo (linhaTeste, linhaTreina):
+def distanciaEuclidiana (linhaTeste, linhaTreina, individuo):
     soma = 0
     i = 0
     while i < 132: #itera por todas as 132 características
-        soma += ((float(linhaTeste[i]) - float(linhaTreina[i])) ** 2) # (x1 - x2)²
+        if individuo[i]:
+            soma += (linhaTeste[i] - linhaTreina[i]) ** 2 # (x1 - x2)²
         i+=1
 
     return (soma ** 0.5)            # raiz((x1 - x2)² + (y1 - y2)²)
-    
-def comparaLinha (linhaTeste):
+
+def kNN (linhaTeste, individuo, treinamento, K):
     classes = [0,0,0,0,0,0,0,0,0,0] # Vetor de classes, cada posição refere-se a uma classe (0-9) onde será armazenado o número de acerto pra mesma
     distancia = []                  # Vetor de distâncias (1000 posições)
     for linhaTreina in treinamento: # Itera por cada um dos 1000 dígitos de treinamento
-        linhaTreina = linhaTreina.split(' ')
-        distancia.append(algoritmo(linhaTeste, linhaTreina))
+        distancia.append(distanciaEuclidiana(linhaTeste, linhaTreina, individuo))
 
     # Descobre qual a classe do dígito que obteve menor distância
     contador = 0        # Contador de K
@@ -52,15 +44,99 @@ def comparaLinha (linhaTeste):
     maior = max(classes, key=int)   # retorna o maior valor do vetor de classes 
     return classes.index(maior)         # retorna o índice da classe 
 
-i = 0
-acertos = 0
-for linhaTeste in teste: # Itera por cada um dos 1000 dígitos de teste
-    digito = int(i/100)
-    linhaTeste = linhaTeste.split(' ')
-    indice = comparaLinha(linhaTeste)
-    if indice == digito:
-        acertos += 1
-    i += 1
+def avaliaPopulacao(populacao, teste, treinamento, K):
+    populacaoAvaliada = []
+    auxDigito = 0
+    acertos = 0
 
-porcentagem = (acertos/1000) * 100
-print("Accuracy:", porcentagem, '%')
+    for i in range(7):
+        for linhaTeste in teste: # Itera por cada um dos 1000 dígitos de teste
+            digito = int(auxDigito/100)
+            indice = kNN(linhaTeste, populacao[i], treinamento, K)
+            if indice == digito:
+                acertos += 1
+            auxDigito += 1
+
+        populacaoAvaliada.append((acertos/1000) * 100)
+        acertos = 0
+        auxDigito = 0
+    print("Avaliação da População: ", populacaoAvaliada)
+    return populacaoAvaliada
+
+def geraPopulacao():
+    populacao = []
+    individuo = []
+    for i in range(10):
+        for j in range(132):
+            individuo.append(random.randint(0,1))
+        populacao.append(individuo)
+        individuo = []
+    
+    return populacao
+
+
+def recombinacao(populacao, avaliacao):
+    pais = []
+    novaPopulacao = []
+    novoIndividuo = []
+    for i in range(2):
+        maior = max(avaliacao)
+        indiceMaiorAvaliacao = avaliacao.index(maior)
+        pais.append(populacao[indiceMaiorAvaliacao])
+        avaliacao[indiceMaiorAvaliacao] = -float('inf')
+    
+    pai = pais[0]
+    mae = pais[1]
+    
+    for i in range(6):
+        corte = random.randint(1,130)
+        
+        novoIndividuo = pai[0:corte] + mae[corte:]
+        novaPopulacao.append(novoIndividuo)
+    
+    novaPopulacao.append(pai)
+    
+    individuoMutado = random.randint(0,6)
+    caracteristicaMutada = random.randint(0,131)
+
+    if(novaPopulacao[individuoMutado][caracteristicaMutada]):
+        novaPopulacao[individuoMutado][caracteristicaMutada] = 0
+    else:
+        novaPopulacao[individuoMutado][caracteristicaMutada] = 1
+
+    return novaPopulacao
+
+def main():
+    K = int(sys.argv[1])
+    geracao = 1
+
+    # Abrindo arquivos
+    arquivoTeste       = open ('teste.txt', 'r')
+    arquivoTreinamento = open('treinamento.txt', 'r')
+
+    populacao = geraPopulacao() 
+
+    teste = []
+    treinamento = []
+
+
+    linhaTreinamento = arquivoTreinamento.readline()
+    while linhaTreinamento:
+        arrayFloat = [float(i) for i in linhaTreinamento.rstrip('\n\r').split(' ')]
+        treinamento.append(arrayFloat)
+        linhaTreinamento = arquivoTreinamento.readline()
+
+    linhaTeste = arquivoTeste.readline()
+    while linhaTeste:
+        arrayFloat = [float(i) for i in linhaTeste.rstrip('\n\r').split(' ')]
+        teste.append(arrayFloat)
+        linhaTeste = arquivoTeste.readline()
+
+    for i in range(3):
+        print("* GERAÇÃO ", geracao , " *")
+        avaliacao = avaliaPopulacao(populacao, teste, treinamento, K)
+        novaPopulacao = recombinacao(populacao, avaliacao)
+        populacao = novaPopulacao
+        geracao += 1
+        print("-------------------------------------------")
+main()
